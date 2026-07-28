@@ -147,7 +147,6 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
 
-        /* เมื่อไหร่ที่มีคลาส flipped ให้พลิกหน้าการ์ด */
         .card-object.flipped {
             transform: rotateY(180deg);
             box-shadow: 0 0 30px var(--gold-glow);
@@ -163,7 +162,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* หลังไพ่ (ตอนยังไม่เปิด) */
+        /* หลังไพ่ */
         .card-back {
             background: linear-gradient(135deg, #311052 0%, #11052c 100%);
             display: flex;
@@ -192,7 +191,7 @@
             100% { transform: scale(1.0); opacity: 0.8; }
         }
 
-        /* หน้าไพ่ (ตอนเปิดแล้ว) */
+        /* หน้าไพ่ */
         .card-front {
             background: var(--card-glass);
             backdrop-filter: blur(12px);
@@ -207,24 +206,23 @@
             object-fit: cover;
         }
 
-        .card-name-container {
-            text-align: center;
+        /* ชื่อไพ่ใต้การ์ด (แสดงชัดเจนทันทีที่เปิด) */
+        .card-name-display {
             margin-top: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--gold-primary);
+            text-align: center;
             opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.4s ease 0.4s, transform 0.4s ease 0.4s;
+            transform: translateY(5px);
+            transition: opacity 0.4s ease 0.3s, transform 0.4s ease 0.3s;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+            letter-spacing: 0.5px;
         }
 
-        /* เมื่อเปิดไพ่แล้ว ให้ชื่อโผล่ขึ้นมาสมูทๆ */
-        .card-scene.revealed .card-name-container {
+        .card-scene.revealed ~ .card-name-display {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .card-name {
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-main);
         }
 
         /* Modal ขยายภาพพรีเมียม */
@@ -354,7 +352,7 @@
                 const cardObject = document.createElement('div');
                 cardObject.className = 'card-object';
 
-                // หน้าหลังไพ่ (ตอนยังไม่กด)
+                // หน้าหลังไพ่
                 const cardBack = document.createElement('div');
                 cardBack.className = 'card-face card-back';
                 cardBack.innerHTML = `
@@ -362,7 +360,7 @@
                     <small>แตะเพื่อเปิด</small>
                 `;
 
-                // หน้าหน้าไพ่ (ตอนเปิดแล้ว)
+                // หน้าหน้าไพ่
                 const cardFront = document.createElement('div');
                 cardFront.className = 'card-face card-front';
                 cardFront.innerHTML = `
@@ -373,20 +371,20 @@
                 cardObject.appendChild(cardFront);
                 scene.appendChild(cardObject);
 
-                // ชื่อไพ่ด้านล่าง (จะโผล่มาหลังเปิด)
-                const nameContainer = document.createElement('div');
-                nameContainer.className = 'card-name-container';
-                nameContainer.innerHTML = `<div class="card-name">${card.name}</div>`;
-                wrapper.appendChild(scene);
-                wrapper.appendChild(nameContainer);
+                // ชื่อไพ่แสดงผลชัดเจนใต้การ์ดทันทีที่เปิด
+                const nameDisplay = document.createElement('div');
+                nameDisplay.className = 'card-name-display';
+                nameDisplay.textContent = card.name;
 
-                // ฟังก์ชันกดคลิกเพื่อพลิกไพ่
+                wrapper.appendChild(scene);
+                wrapper.appendChild(nameDisplay);
+
+                // ฟังก์ชันคลิกพลิกไพ่
                 scene.onclick = () => {
                     if (!cardObject.classList.contains('flipped')) {
                         cardObject.classList.add('flipped');
                         scene.classList.add('revealed');
                     } else {
-                        // ถ้าเปิดแล้ว กดซ้ำเพื่อเปิด Modal ขยายดูรูปใหญ่เต็มตา
                         openModal(card.image, card.name);
                     }
                 };
