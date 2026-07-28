@@ -3,170 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>หมีพามู Oracle Cards 40 ใบ 🔮</title>
+    <title>ญาณ ณ โลก - Oracle Card Reading</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Sukhumvit Set', 'Kanit', sans-serif;
-            background: linear-gradient(135deg, #1f053a, #5b2c6f, #8e44ad);
-            color: white;
-            text-align: center;
-            padding: 20px;
-            min-height: 100vh;
-            margin: 0;
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.12);
-            padding: 25px;
-            border-radius: 24px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
         }
-        h1 { margin-bottom: 5px; font-size: 28px; color: #ffd700; text-shadow: 0 2px 10px rgba(255,215,0,0.3); }
-        p.subtitle { color: #e0d5ff; font-size: 14px; margin-bottom: 20px; }
-        
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
+        .card-flipped .card-inner {
+            transform: rotateY(180deg);
         }
-        
-        button {
-            background: linear-gradient(45deg, #ff7b00, #ff007f);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 25px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
-            transition: all 0.2s ease;
+        .card-front, .card-back {
+            backface-visibility: hidden;
         }
-        button:active { transform: scale(0.95); }
-        button.secondary {
-            background: linear-gradient(45deg, #8e44ad, #3498db);
+        .card-back {
+            transform: rotateY(180deg);
         }
-        
-        .card-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .gold-glow {
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.25);
         }
-        
-        .card-box {
-            background: rgba(0, 0, 0, 0.25);
-            border: 2px solid #ffd700;
-            border-radius: 18px;
-            padding: 20px;
-            text-align: left;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        
-        .card-title { font-size: 18px; font-weight: bold; color: #ffd700; margin-bottom: 8px; }
-        .card-keyword { font-size: 13px; color: #a6f0ff; margin-bottom: 10px; font-weight: bold; }
-        .card-meaning { font-size: 14px; line-height: 1.6; color: #f1f1f1; }
-        .card-quote { margin-top: 10px; font-size: 13px; color: #ffeaa7; font-style: italic; background: rgba(255,215,0,0.1); padding: 8px; border-radius: 8px; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .gold-border {
+            border: 1px solid rgba(234, 179, 8, 0.4);
         }
     </style>
 </head>
-<body>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between p-4 sm:p-6">
 
-<div class="container">
-    <h1>🔮 หมีพามู Oracle Cards (40 ใบ)</h1>
-    <p class="subtitle">เปิดไพ่ออราเคิลรับพลังงานบวก โดย บอสพี่อ๋อง & เลขาไนน์ 🐻✨</p>
-    
-    <div class="btn-group">
-        <button onclick="drawCards(1)">🃏 สุ่มไพ่ 1 ใบ</button>
-        <button class="secondary" onclick="drawCards(3)">✨ เปิดไพ่ 3 ใบ (แก้เกม)</button>
-    </div>
+    <!-- Header Section -->
+    <header class="text-center my-6">
+        <div class="inline-block p-3 rounded-full bg-amber-500/10 gold-border mb-3">
+            <span class="text-3xl">🔮</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 tracking-wide">
+            ไพ่ออราเคิล ญาณ ณ โลก
+        </h1>
+        <p class="text-amber-200/70 text-sm mt-2">สำรับ 145 ใบ • ถอดรหัสคำทำนายชีวิตและโชคชะตา</p>
+    </header>
 
-    <div class="card-container" id="cardDisplay">
-        <div class="card-box" style="text-align: center;">
-            <div class="card-title">✨ ตั้งจิตอธิษฐาน ✨</div>
-            <div class="card-meaning">สำรับไพ่ 40 ใบพร้อมแล้ว! นึกถึงเรื่องที่บอสต้องการคำแนะนำ แล้วกดสุ่มได้เลยค๊าบอส!</div>
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto w-full flex-grow flex flex-col items-center justify-center">
+        
+        <!-- Spread Mode Selection -->
+        <div class="flex gap-3 mb-8 bg-slate-800/80 p-1.5 rounded-2xl gold-border backdrop-blur">
+            <button onclick="setSpread(1)" id="btn-mode-1" class="px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-amber-500 text-slate-950 font-semibold shadow-lg">
+                เปิด 1 ใบ (คำตอบเร็ว)
+            </button>
+            <button onclick="setSpread(3)" id="btn-mode-3" class="px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-amber-200 hover:bg-slate-700/50">
+                เปิด 3 ใบ (เล่าเรื่อง)
+            </button>
+        </div>
+
+        <!-- Draw Action Button -->
+        <div class="mb-8 text-center">
+            <button onclick="drawCards()" class="px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-lg rounded-full shadow-lg gold-glow hover:scale-105 active:scale-95 transition-all">
+                ✨ สับไพ่และเสี่ยงทาย ✨
+            </button>
+        </div>
+
+        <!-- Cards Display Grid -->
+        <div id="cards-container" class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center min-h-[380px]">
+            <!-- Dynamic Cards inserted here by JS -->
+        </div>
+
+    </main>
+
+    <!-- Modal for Card Details -->
+    <div id="card-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 gold-border rounded-3xl max-w-lg w-full p-6 sm:p-8 relative gold-glow text-slate-100">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            <div id="modal-content"></div>
         </div>
     </div>
-</div>
 
-<script>
-const cards = [
-    { name: "01. จุดเริ่มต้นใหม่ (New Beginning)", keyword: "โอกาสใหม่ • การก้าวข้าม • พลังงานบวก", meaning: "ช่วงนี้เหมาะกับการเริ่มโปรเจกต์ใหม่ๆ สิ่งที่คิดไว้ให้ลงมือทำได้เลย ครูบาอาจารย์และสิ่งศักดิ์สิทธิ์เปิดทางให้แล้ว!", quote: "💡 ความกลัวทำให้ช้า ลงมือทำเลยคือคำตอบ" },
-    { name: "02. แสงสว่างปัญญา (Divine Light)", keyword: "ความนิ่ง • สติ • การมองเห็นทางออก", meaning: "หากเจอปัญหาติดขัด ให้ถอยออกมาตั้งสติ 1 ก้าว ใช้ปัญญาและสมาธิ แล้วบอสจะพบทางออกอย่างอัศจรรย์", quote: "💡 นิ่งสงบ สยบความเคลื่อนไหว" },
-    { name: "03. ขุมทรัพย์และโชคลาภ (Abundance)", keyword: "ความมั่งคั่ง • ดึงดูดสิ่งดีๆ • ผลตอบแทน", meaning: "สิ่งที่เหน็ดเหนื่อยทำมานานกำลังจะส่งผลสำเร็จ ดึงดูดโชคลาภและโอกาสทางธุรกิจเข้ามาอย่างต่อเนื่อง!", quote: "💡 ยิ้มรับความโชคดี เปิดใจรับสิ่งใหม่" },
-    { name: "04. การคุ้มครอง (Divine Protection)", keyword: "แคล้วคลาด • ปลอดภัย • พลังบารมี", meaning: "ไม่ต้องกังวลกับสิ่งรอบตัว บารมีครูบาอาจารย์คุ้มครองให้แคล้วคลาดปลอดภัย รอดพ้นจากอุปสรรคทั้งปวง", quote: "💡 ศรัทธามั่นคง จิตใจตั้งมั่น" },
-    { name: "05. เมตตามหาเสน่ห์ (Charming Energy)", keyword: "คนรักเอ็นดู • ผู้ใหญ่สนับสนุน • ความสัมพันธ์", meaning: "ช่วงนี้ไปไหนก็มีแต่คนอยากช่วยเหลือ เจรจาค้าขายหรือติดต่อติดงานราบรื่น พูดอะไรใครก็คล้อยตามค๊าบอส!", quote: "💡 วาจาเป็นทรัพย์ ปรารถนาดีต่อกัน" },
-    { name: "06. พักผ่อนเติมพลัง (Rest & Recharge)", keyword: "ชะลอความเร็ว • ถนอมร่างกาย • ชาร์จพลัง", meaning: "อย่าเพิ่งหักโหมจนเกินไปค๊าบอส! ไพ่ออกมาเตือนให้พักผ่อนร่างกาย จิบชาร้อนๆ จิตใจสบายแล้วค่อยลุยต่อ", quote: "💡 การพักผ่อน คือส่วนหนึ่งของความสำเร็จ" },
-    { name: "07. ชัยชนะและความสำเร็จ (Victory)", keyword: "ก้าวหน้า • ทะลุเป้า • ความสมหวัง", meaning: "สิ่งที่บอสพี่อ๋องตั้งใจทำอยู่จะประสบความสำเร็จอย่างงดงาม สิ่งอุปสรรคจะแพ้พ่ายไปเองค๊า!", quote: "💡 เชื่อมั่นในตัวเอง แล้วเดินหน้าต่อ" },
-    { name: "08. ปล่อยวางสิ่งเก่า (Release & Receive)", keyword: "ละทิ้งความเครียด • เคลียร์พื้นที่ • รับสิ่งใหม่", meaning: "อะไรที่ควบคุมไม่ได้ ให้ปล่อยให้มันผ่านไปค๊าบอส ยิ่งปล่อยวางเร็ว เท่ากับเปิดพื้นที่รับสิ่งดีๆ เข้ามาเร็วขึ้น", quote: "💡 ไม่ยึดติด จิตใจปลอดโปร่ง" },
-    { name: "09. ปาฏิหาริย์แห่งศรัทธา (Miracle)", keyword: "สิ่งไม่อัศจรรย์เกิดได้ • โชคช่วย • เซอร์ไพรส์", meaning: "เตรียมตัวรับข่าวดีหรือโอกาสที่ไม่คาดฝัน สิ่งศักดิ์สิทธิ์จัดสรรเรื่องดีๆ มาให้อย่างไม่ทันตั้งตัวค๊า!", quote: "💡 ศรัทธามา ปาฏิหาริย์เกิด" },
-    { name: "10. สมดุลแห่งชีวิต (Balance & Harmony)", keyword: "กายใจสมดุล • ราบรื่น • มีความสุข", meaning: "การงาน การเงิน และสุขภาพจิตใจกำลังเข้าสู่จุดสมดุลที่ลงตัว ไม่ต้องเร่งรีบ วางใจในจังหวะชีวิตค๊าบอส", quote: "💡 เดินทางสายกลาง หัวใจผ่อนคลาย" },
-    { name: "11. บารมีครูบาอาจารย์ (Guru's Blessing)", keyword: "ครูหนุนหลัง • สายสิญจน์คุ้มภัย • สิ่งศักดิ์สิทธิ์นำทาง", meaning: "บารมีครูบาอาจารย์สายตรงคอยคุ้มครองและเมตตา ให้ตั้งจิตนึกถึงองค์ครู แล้วทุกอย่างจะราบรื่น", quote: "💡 กตัญญูต่อครู นำพาชีวิตรุ่งเรือง" },
-    { name: "12. วาจาสิทธิ์ (Sacred Speech)", keyword: "คำพูดมีพลัง • เจรจาพารวย • คอนเทนต์ปัง", meaning: "วาจาเป็นเงินเป็นทอง คอนเทนต์หรือคำพูดที่บอสสื่อสารออกไปช่วงนี้จะมีพลังดึงดูดผู้คนอย่างมาก", quote: "💡 คิดดี พูดดี พลังบวกสร้างมิตร" },
-    { name: "13. สายลมแห่งการเปลี่ยนแปลง (Winds of Change)", keyword: "ปรับตัว • สิ่งใหม่เข้ามา • ขยับขยาย", meaning: "มีการเปลี่ยนแปลงในทิศทางที่ดีขึ้น อย่ากลัวการปรับตัว เพราะสายลมนี้จะพัดพาบอสไปสู่จุดที่สูงกว่าเดิม", quote: "💡 ปรับลู่ตามลม ยืดหยุ่นแต่ตั้งมั่น" },
-    { name: "14. เข็มทิศชีวิต (Life Compass)", keyword: "เป้าหมายชัดเจน • ไม่หลงทาง • ตัดสินใจถูก", meaning: "บอสมองเห็นภาพรวมและทิศทางอย่างชัดเจน ตัดสินใจเรื่องสำคัญช่วงนี้จะไม่ผิดพลาดแน่นอนค๊า", quote: "💡 เชื่อในเข็มทิศภายในใจตนเอง" },
-    { name: "15. ขุมพลังในตนเอง (Inner Power)", keyword: "ศัยกภาพเต็มเปี่ยม • เก่งเกินตัว • ลุยได้สบาย", meaning: "บอสมีศักยภาพและศักดิ์ศรีในตัวเองเต็มร้อย มั่นใจในฝีมือแล้วลุยได้เลย ไนน์ซัพพอร์ตเต็มที่!", quote: "💡 ศักยภาพไร้ขีดจำกัด หากเราตั้งใจ" },
-    { name: "16. มิตรมงคล (Noble Friends)", keyword: "กัลยาณมิตร • ทีมงานดี • พาร์ทเนอร์ส่งเสริม", meaning: "ได้พบเจอคนดีๆ ทีมงานหรือพาร์ทเนอร์ที่พร้อมช่วยเหลือและหนุนหลังให้โปรเจกต์เดินหน้าอย่างรวดเร็ว", quote: "💡 มิตรแท้ พารอดพ้นอุปสรรค" },
-    { name: "17. ปลดล็อกพันธนาการ (Unlocking Potential)", keyword: "หลุดพ้นปมติดขัด • คลายความกังวล • อิสระ", meaning: "ปัญหากวนใจเรื่องงานหรือเอกสารจะค่อยๆ คลี่คลาย ปลดล็อกสิ่งขัดขวางออกไปได้อย่างน่าอัศจรรย์", quote: "💡 เมื่อใจปลดล็อก ทางออกก็ปรากฏ" },
-    { name: "18. สติปัญญาแก้เกม (Strategic Wisdom)", keyword: "กลยุทธ์เหนือชั้น • แก้ปัญหาเฉียบขาด • วางแผนเลิศ", meaning: "ใช้สมองและประสบการณ์วางแผนอย่างเป็นระบบ แล้วบอสจะพลิกสถานการณ์กลับมาเป็นฝ่ายได้เปรียบ!", quote: "💡 ปัญญาคืออาวุธที่คมที่สุด" },
-    { name: "19. ความเพียรไร้พ่าย (Unshakeable Grit)", keyword: "อดทน • ไม่ยอมแพ้ • ดอกผลกำลังบาน", meaning: "ความเหน็ดเหนื่อยที่บอสทุ่มเทมาตลอดไม่สูญเปล่า ดอกผลแห่งความเพียรกำลังจะส่งผลในเร็วๆ นี้", quote: "💡 อดทนวันนิด ผลลัพธ์งดงามเสมอ" },
-    { name: "20. หยาดน้ำชโลมใจ (Healing & Comfort)", keyword: "ใจฟู • ได้รับกำลังใจ • พลังงานบวกอบอวล", meaning: "ช่วงเวลาแห่งการฮีลใจและรับพลังงานบวกเข้ามา บอสจะรู้สึกผ่อนคลาย สบายใจ และใจฟูมากขึ้นค๊า", quote: "💡 ให้ความเมตตาต่อตนเองเป็นอันดับแรก" },
-    { name: "21. จังหวะเวลาที่ใช่ (Divine Timing)", keyword: "Timing เป๊ะ • ไม่ช้าไม่สาย • เหมาะสมที่สุด", meaning: "ไม่ต้องรีบร้อนเกินไป เพราะทุกอย่างกำลังถูกจัดสรรให้อยู่ในจังหวะเวลาที่ลงตัวและดีที่สุดสำหรับบอส", quote: "💡 จังหวะเวลาจักรวาล แม่นยำเสมอ" },
-    { name: "22. เกราะแก้วคุ้มกัน (Spiritual Shield)", keyword: "ป้องกันสิ่งไม่ดี • สะท้อนพลังลบ • จิตแข็งแกร่ง", meaning: "พลังงานลบหรือสิ่งกวนใจรอบตัวจะทำอะไรบอสไม่ได้ บารมีคุ้มตัวสะท้อนสิ่งไม่ดีออกไปหมดค๊า", quote: "💡 จิตบริสุทธิ์ คือเกราะป้องกันที่ดีที่สุด" },
-    { name: "23. ข่าวดีจาก遠方 (Good News Ahead)", keyword: "ได้รับข่าวดี • โอกาสทางไกล • ข่าวสำเร็จ", meaning: "เตรียมตัวฟังข่าวดีเรื่องงาน เรื่องโปรเจกต์ หรือโอกาสใหม่ๆ ที่จะส่งตรงเข้ามาหาบอสเร็วๆ นี้!", quote: "💡 เปิดใจรอรับ ข่าวดีกำลังมาถึง" },
-    { name: "24. การลงทุนที่คุ้มค่า (Fruitful Investment)", keyword: "คุ้มเหนื่อย • คุ้มเวลา • ได้ผลตอบแทนสูง", meaning: "การทุ่มเทแรงกาย แรงใจ หรือทรัพยากรลงไปในตอนนี้ จะส่งผลกำไรและความสำเร็จกลับมาอย่างคุ้มค่า", quote: "💡 หว่านเมล็ดพันธุ์ดี ย่อมได้ผลดี" },
-    { name: "25. เมฆหมอกจางหาย (Clarity Restored)", keyword: "กระจ่างแจ้ง • หมดความสับสน • เห็นทางสว่าง", meaning: "ความสับสนหรือเมฆหมอกควันดำในหัวจะจางหายไป ความจริงและความสว่างสดใสจะปรากฏชัดเจน", quote: "💡 หลังฝนตก ย่อมมีสายรุ้งเสมอ" },
-    { name: "26. พลังแห่งความอ่อนน้อม (Humble Strength)", keyword: "อ่อนนอกแข็งใน • คนเอ็นดู • ชนะใจคน", meaning: "การใช้วาจาและกิริยานอบน้อม จะช่วยเปิดประตูที่ปิดอยู่ให้เปิดออก และได้รับความร่วมมือเป็นอย่างดี", quote: "💡 ไม้ใหญ่ลู่ลม ย่อมยืนต้นได้นาน" },
-    { name: "27. ยอดเขาแห่งความสำเร็จ (Peak Achievement)", keyword: "ถึงเป้าหมาย • ยอดเยี่ยม • ได้รับการยอมรับ", meaning: "ความสำเร็จระดับไฮไลท์กำลังมาถึง บอสจะได้รับความชมเชย ผลงานเป็นที่ยอมรับและสร้างชื่อเสียง", quote: "💡 ความพยายาม ไม่เคยหลอกลวงใคร" },
-    { name: "28. สายน้ำไม่ไหลย้อนกลับ (Moving Forward)", keyword: "เดินหน้าต่อ • ไม่มองเหลียวหลัง • อนาคตสดใส", meaning: "อย่าเสียเวลากับอดีตที่ผ่านไป เดินหน้าไปข้างหน้าอย่างมั่นใจ เพราะอนาคตมีสิ่งที่งดงามกว่ารออยู่", quote: "💡 สายตาโฟกัสที่จุดหมายข้างหน้า" },
-    { name: "29. พรแห่งมหาลาภ (Great Fortune)", keyword: "ลาภลอย • เงินทองไหลมา • โชคใหญ่", meaning: "พลังงานโชคลาภเด่นมาก! มีโอกาสได้โชคลาภพิเศษ เงินทองไหลมาเทมา หรือได้ลาภปากของอร่อยค๊าบอส", quote: "💡 รับโชคด้วยความยินดี และแบ่งปัน" },
-    { name: "30. ต้นไม้ใหญ่บังลม (Safe Haven)", keyword: "ที่พึ่งพา • ความมั่นคง • ปลอดภัยหายห่วง", meaning: "บอสมีความมั่นคง มีหลักยึดเหนี่ยวจิตใจที่ดี และมีผู้ใหญ่คอยปกป้องดูแลเหมือนต้นไม้ใหญ่", quote: "💡 ร่มเงาแห่งบุญ กอบกู้ความสบายใจ" },
-    { name: "31. แสงไฟปลายอุโมงค์ (Light at the Tunnel)", keyword: "ใกล้หมดอุปสรรค • ความหวังใหม่ • รอดพ้น", meaning: "ใครที่กำลังเจอปัญหาหนักๆ แสงสว่างปลายอุโมงค์ปรากฏแล้ว อุปสรรคกำลังจะผ่านพ้นไปค๊าบอส!", quote: "💡 อดทนอีกนิด แสงสว่างรออยู่" },
-    { name: "32. การสร้างบารมี (Building Merit)", keyword: "ทำดีได้ดี • สั่งสมบุญ • พลังงานบริสุทธิ์", meaning: "การทำบุญ สวดมนต์ หรือทำทานในช่วงนี้จะช่วยหนุนดวงชะตาให้พุ่งทะยานและมีความสุขสงบในใจ", quote: "💡 บุญสร้างได้ทุกวัน ด้วยจิตใจที่คิดดี" },
-    { name: "33. สัญชาตญาณแม่นยำ (Intuition Glow)", keyword: "ซิกเซนส์แรง • ลางสังหรณ์ถูกต้อง • เชื่อความรู้สึก", meaning: "ความรู้สึกแรกหรือซิกเซนส์ของบอสช่วงนี้แม่นยำมาก หากรู้สึกว่าใช่ให้ลุย หากรู้สึกแปลกๆ ให้ชะลอก่อน", quote: "💡 เสียงในใจ คือเข็มทิศอันเที่ยงตรง" },
-    { name: "34. ขยายอาณาเขต (Expanding Horizon)", keyword: "โตขึ้นอีกขั้น • ขยายช่องทาง • สเกลงานใหญ่", meaning: "ถึงเวลาขยายขอบเขตการทำงาน ขยายช่องทางคอนเทนต์ หรือเปิดรับสิ่งใหม่ๆ เข้ามาเติบโต", quote: "💡 ก้าวออกจาก Comfort Zone เพื่อเติบโต" },
-    { name: "35. ถอยเพื่อก้าวใหญ่ (Step Back to Leap)", keyword: "ตั้งหลัก • ดูเชิง • กระโดดได้ไกลกว่าเดิม", meaning: "การถอยมาตั้งหลักไม่ได้แปลว่าแพ้ แต่เป็นการรวบรวมพลังงานเพื่อกระโดดข้ามอุปสรรคไปให้ไกลกว่าเดิม", quote: "💡 ย่อตัวลง เพื่อย่างก้าวที่มั่นคง" },
-    { name: "36. การเฉลิมฉลอง (Celebration)", keyword: "ข่าวดี • ฉลองสำเร็จ • กินของอร่อยฮีลใจ", meaning: "เตรียมตัวจัดปาร์ตี้เล็กๆ หรือฉลองความสำเร็จกับคนรอบตัว ได้เวลาผ่อนคลายและมีความสุขแล้วค๊า", quote: "💡 ยินดีกับทุกความสำเร็จ เล็กหรือใหญ่" },
-    { name: "37. ความสงบในใจ (Inner Peace)", keyword: "นิ่งผ่อนคลาย • ไร้ความกังวล • สบายใจ", meaning: "จิตใจเข้าสู่สภาวะสงบ นิ่ง และไร้ความกังวล พลังงานรอบตัวดีเยี่ยม เหมาะกับการพักผ่อนอย่างเต็มที่", quote: "💡 สันติในใจ คือลาภอันประเสริฐ" },
-    { name: "38. เปิดประตูโอกาส (Door of Opportunity)", keyword: "โอกาสทอง • คว้าไว้เลย • ทางสะดวก", meaning: "ประตูโอกาสบานใหญ่เปิดออกแล้ว อย่าลังเลที่จะก้าวเข้าไป คว้าไว้แล้วทำให้ออกมาดีที่สุดค๊า!", quote: "💡 โอกาสมาถึง ต้องรีบคว้าด้วยสองมือ" },
-    { name: "39. คำสรรเสริญ (Recognition & Praise)", keyword: "คนชมเชย • ผลงานเด่น • สร้างชื่อเสียง", meaning: "ผลงานและความทุ่มเทของบอสพี่อ๋องจะได้รับการยอมรับ มีคนเห็นคุณค่าและกล่าวคำสรรเสริญอย่างจริงใจ", quote: "💡 คุณค่าในตัวเรา เปล่งประกายเสมอ" },
-    { name: "40. สายใยแห่งศรัทธา (Thread of Faith)", keyword: "ศรัทธามั่นคง • พลังจิตปาฏิหาริย์ • ยึดเหนี่ยวจิตใจ", meaning: "ตราบใดที่มีความศรัทธาและจิตใจดีงาม ปาฏิหาริย์และสิ่งดีๆ จะหมุนรอบตัวบอสพี่อ๋องเสมอค๊าบอส!", quote: "💡 ศรัทธาแรงกล้า นำพาชีวิตรุ่งโรจน์" }
-];
+    <!-- Footer -->
+    <footer class="text-center py-6 text-slate-500 text-xs">
+        <p>© ญาณ ณ โลก Oracle Card Application • Powered by หมีพามู 🐻✨</p>
+    </footer>
 
-function drawCards(count) {
-    const display = document.getElementById('cardDisplay');
-    display.innerHTML = '';
-    
-    // สุ่มไพ่แบบไม่ซ้ำกันจาก 40 ใบ
-    const shuffled = [...cards].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, count);
-    
-    const titles = ["1. สถานการณ์ปัจจุบัน", "2. ทางออก / คำแนะนำ", "3. ผลลัพธ์ / พลังงานบวก"];
-    
-    selected.forEach((card, index) => {
-        const cardElement = document.createElement('div');
-        cardElement.className = 'card-box';
-        
-        let positionTitle = count === 3 ? `<div style="color: #a6f0ff; font-weight: bold; font-size: 13px; margin-bottom: 5px;">📌 ตำแหน่งที่ ${titles[index]}</div>` : '';
-        
-        cardElement.innerHTML = `
-            ${positionTitle}
-            <div class="card-title">✨ ${card.name}</div>
-            <div class="card-keyword">🔑 ${card.keyword}</div>
-            <div class="card-meaning">${card.meaning}</div>
-            <div class="card-quote">${card.quote}</div>
-        `;
-        display.appendChild(cardElement);
-    });
-}
-</script>
+    <!-- Logic & Data Script -->
+    <script>
+        // Data Structure for 145 Cards
+        // สามารถแยกไฟล์เป็น cards.json ได้ หรือใส่ใน array นี้ได้เลยค๊าบ
+        const cardsData = [
+            { id: 1, name: "อำนาจ บารมี", category: "ทั่วไป", position_type: "อำนาจ/วาสนา", keyword: "ความเป็นผู้นำ การปกครอง ความสำเร็จในตำแหน่ง", detail: "แสดงถึงอำนาจ วาสนา บารมี การได้รับการยอมรับ การเติบโตในหน้าที่การงาน มีผู้คนยำเกรงและให้ความเคารพ" },
+            { id: 5, name: "พ่อแก่", category: "ครูบาอาจารย์", position_type: "สิ่งศักดิ์สิทธิ์", keyword: "ครูบาอาจารย์ การเรียนรู้ ปัญญาบารมี", detail: "บารมีบรมครูสายฤาษี คุ้มครองป้องกันภัย ให้ปัญญา ความรู้ความเข้าใจในการดำเนินชีวิต และการได้รับความเมตตาจากผู้ใหญ่" },
+            { id: 64, name: "เทวดาประจำตัว", category: "สิ่งศักดิ์สิทธิ์", position_type: "การคุ้มครอง", keyword: "การปกป้องคุ้มครอง สิ่งศักดิ์สิทธิ์ดูแล", detail: "มีเทวดาหรือสิ่งศักดิ์สิทธิ์คอยปกป้องคุ้มครอง แคล้วคลาดปลอดภัย ทำสิ่งใดให้หมั่นสร้างบุญกุศลเพื่อเพิ่มบารมี" },
+            { id: 65, name: "บริหาร", category: "การงาน", position_type: "การจัดการ", keyword: "การวางแผน การจัดการระบบ ความเป็นมืออาชีพ", detail: "เน้นการบริหารจัดการ ทั้งเรื่องงาน เงิน และเวลา ต้องใช้ความคิดที่เป็นระบบ การตัดสินใจด้วยเหตุผลมากกว่าอารมณ์" },
+            { id: 70, name: "ธาตุน้ำ", category: "ชุดธาตุ", position_type: "อารมณ์/ความรู้สึก", keyword: "ความยืดหยุ่น ความรู้สึก จินตนาการ", detail: "สัญลักษณ์แห่งความปรับตัว ความใจเย็น การไหลลื่น สื่อถึงอารมณ์ความรู้สึก จิตวิญญาณ และเสน่ห์" },
+            { id: 80, name: "คู่รัก", category: "ชุดคู่", position_type: "ความสัมพันธ์", keyword: "ความรัก ความเข้าใจ สมพงษ์", detail: "ความสัมพันธ์ที่แน่นแฟ้น ความเข้าใจกันอย่างดีเยี่ยม การพบเจอเนื้อคู่ หรือการส่งเสริมซึ่งกันและกัน" },
+            { id: 145, name: "รวย", category: "โชคลาภ", position_type: "ความมั่งคั่ง", keyword: "ลาภลอย ความมั่งคั่ง อุดมสมบูรณ์", detail: "ความอุดมสมบูรณ์ขั้นสุด เงินทองไหลมาเทมา การประสบความสำเร็จทางการเงิน ได้โชคได้ลาภอย่างไม่คาดฝัน" }
+            // บอสสามารถเพิ่มใบที่ 2 - 144 ต่อใน array นี้ได้ครบ 145 ใบเลยน้าค๊าบ!
+        ];
 
+        let currentSpreadMode = 1;
+        const spreadLabels = {
+            3: ["1. จุดเริ่มต้น (อดีต/รากฐาน)", "2. จุดเชื่อมโยง (ปัจจุบัน/ปัจจัย)", "3. บทสรุป (อนาคต/ทางออก)"]
+        };
+
+        function setSpread(mode) {
+            currentSpreadMode = mode;
+            const btn1 = document.getElementById('btn-mode-1');
+            const btn3 = document.getElementById('btn-mode-3');
+            
+            if (mode === 1) {
+                btn1.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-amber-500 text-slate-950 font-semibold shadow-lg";
+                btn3.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-amber-200 hover:bg-slate-700/50";
+            } else {
+                btn3.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-amber-500 text-slate-950 font-semibold shadow-lg";
+                btn1.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-amber-200 hover:bg-slate-700/50";
+            }
+            // Clear current view
+            document.getElementById('cards-container').innerHTML = '';
+        }
+
+        function drawCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = '';
+
+            // Shuffle array randomly
+            const shuffled = [...cardsData].sort(() => 0.5 - Math.random());
+            const selectedCards = shuffled.slice(0, currentSpreadMode);
+
+            selectedCards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'w-full max-w-[240px] h-[360px] perspective cursor-pointer group';
+                
+                const labelText = currentSpreadMode === 3 ? spreadLabels[3][index] : "คำทำนายของคุณ";
+
+                cardElement.innerHTML = `
+                    <div class="text-xs font-semibold text-amber-300 text-center mb-2 h-4">${labelText}</div>
+                    <div class="card-inner relative w-full h-[320px] rounded-2xl shadow-xl transition-transform duration-700 gold-border bg-slate-800">
+                        <!-- Front (Card Back Graphic) -->
+                        <div class="card-front absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-amber-950 flex flex-col items-center justify-center p-4 border border-amber-500/30">
+                            <div class="w-16 h-16 rounded-full border border-amber-400/40 flex items-center justify-center bg-amber-500/10 mb-2">
+                                <span class="text-2xl">👁️</span>
+                            </div>
+                            <span class="text-xs font-medium text-amber-200/60 uppercase tracking-widest">ญาณ ณ โลก</span>
+                            <span class="text-[10px] text-slate-500 mt-1">แตะเพื่อเปิดไพ่</span>
+                        </div>
+                        <!-- Back (Card Result) -->
+                        <div class="card-back absolute inset-0 rounded-2xl bg-slate-900 border-2 border-amber-400 p-5 flex flex-col justify-between text-center gold-glow">
+                            <div>
+                                <span class="text-xs px-2 py-1 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">ใบที่ ${card.id} • ${card.category}</span>
+                                <h3 class="text-xl font-bold text-amber-300 mt-3 mb-1">${card.name}</h3>
+                                <p class="text-xs text-amber-100/80 font-medium mb-3">"${card.keyword}"</p>
+                            </div>
+                            <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/50">
+                                <p class="text-xs text-slate-300 line-clamp-4 leading-relaxed">${card.detail}</p>
+                            </div>
+                            <button onclick="showDetail(${card.id})" class="mt-2 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-xs font-medium transition-colors">
+                                อ่านความหมายเต็ม 📖
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Add click to flip animation
+                cardElement.addEventListener('click', function(e) {
+                    if(!e.target.classList.contains('bg-amber-500/20')) {
+                        this.querySelector('.card-inner').parentElement.classList.toggle('card-flipped');
+                    }
+                });
+
+                container.appendChild(cardElement);
+            });
+        }
+
+        function showDetail(cardId) {
+            const card = cardsData.find(c => c.id === cardId);
+            if (!card) return;
+
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = `
+                <div class="text-center mb-4">
+                    <span class="text-xs px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">
+                        ไพ่ใบที่ ${card.id} • ${card.category}
+                    </span>
+                    <h2 class="text-2xl font-bold text-amber-300 mt-3">${card.name}</h2>
+                    <p class="text-sm text-amber-200/80 mt-1 italic">"${card.keyword}"</p>
+                </div>
+                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60 mb-4">
+                    <h4 class="text-xs font-semibold text-amber-400 mb-1">คำทำนายละเอียด</h4>
+                    <p class="text-sm text-slate-200 leading-relaxed">${card.detail}</p>
+                </div>
+                <div class="text-center">
+                    <button onclick="closeModal()" class="px-6 py-2 bg-amber-500 text-slate-950 font-semibold rounded-full text-sm hover:bg-amber-400 transition-colors">
+                        ตกลง / ปิดหน้าต่าง
+                    </button>
+                </div>
+            `;
+
+            const modal = document.getElementById('card-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('card-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
 </body>
 </html>
