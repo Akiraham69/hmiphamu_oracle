@@ -270,7 +270,6 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'card-item';
                 cardDiv.style.animationDelay = `${index * 0.15}s`;
-                // ใช้ card.image ตามโครงสร้าง JSON ของบอส
                 cardDiv.onclick = () => openModal(card.image, card.name);
 
                 cardDiv.innerHTML = `
