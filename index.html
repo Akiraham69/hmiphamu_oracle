@@ -270,11 +270,12 @@
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'card-item';
                 cardDiv.style.animationDelay = `${index * 0.15}s`;
-                cardDiv.onclick = () => openModal(card.image_file, card.name);
+                // ใช้ card.image ตามโครงสร้าง JSON ของบอส
+                cardDiv.onclick = () => openModal(card.image, card.name);
 
                 cardDiv.innerHTML = `
                     <div class="card-image-wrapper">
-                        <img src="${card.image_file}" alt="${card.name}" onerror="handleImageError(this)">
+                        <img src="${card.image}" alt="${card.name}" onerror="handleImageError(this)">
                         <div class="fallback-content" style="display:none; position:absolute; width:100%; height:100%; flex-direction:column; justify-content:center; align-items:center;">
                             <span style="font-size: 2.8rem; margin-bottom: 8px;">🎴</span>
                             <small style="color: #cbd5e1; font-weight: 500; font-size: 0.9rem;">ใบที่ ${card.id}</small>
