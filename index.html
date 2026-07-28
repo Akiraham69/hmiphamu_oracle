@@ -25,7 +25,7 @@
             transform: rotateY(180deg);
         }
         .gold-glow {
-            box-shadow: 0 0 25px rgba(234, 179, 8, 0.3);
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.35);
         }
         .gold-border {
             border: 1px solid rgba(234, 179, 8, 0.4);
@@ -66,7 +66,7 @@
         </div>
 
         <!-- Cards Display Grid -->
-        <div id="cards-container" class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center min-h-[400px]">
+        <div id="cards-container" class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center min-h-[420px]">
             <!-- Dynamic Cards -->
         </div>
 
@@ -130,42 +130,59 @@
 
             selectedCards.forEach((card, index) => {
                 const cardElement = document.createElement('div');
-                cardElement.className = 'w-full max-w-[240px] h-[370px] perspective cursor-pointer group';
+                cardElement.className = 'w-full max-w-[240px] flex flex-col items-center group';
                 
                 const labelText = currentSpreadMode === 3 ? spreadLabels[3][index] : "คำทำนายของคุณ";
                 const imgPath = card.image || `images/${card.id}.jpg`;
 
                 cardElement.innerHTML = `
-                    <div class="text-xs font-semibold text-amber-300 text-center mb-2 h-4">${labelText}</div>
-                    <div class="card-inner relative w-full h-[330px] rounded-2xl shadow-xl transition-transform duration-700 gold-border bg-slate-800">
-                        <!-- Front (หลังไพ่) -->
-                        <div class="card-front absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-amber-950 flex flex-col items-center justify-center p-4 border border-amber-500/30">
-                            <div class="w-16 h-16 rounded-full border border-amber-400/40 flex items-center justify-center bg-amber-500/10 mb-2">
-                                <span class="text-2xl">👁️</span>
+                    <div class="text-xs font-semibold text-amber-300 text-center mb-2 h-4 tracking-wide">${labelText}</div>
+                    <div class="card-wrapper w-full h-[350px] perspective cursor-pointer">
+                        <div class="card-inner relative w-full h-full rounded-2xl shadow-xl transition-transform duration-700 gold-border bg-slate-800">
+                            
+                            <!-- Front (หลังไพ่) -->
+                            <div class="card-front absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-amber-950 flex flex-col items-center justify-center p-4 border border-amber-500/30">
+                                <div class="w-16 h-16 rounded-full border border-amber-400/40 flex items-center justify-center bg-amber-500/10 mb-2">
+                                    <span class="text-2xl">👁️</span>
+                                </div>
+                                <span class="text-xs font-medium text-amber-200/60 uppercase tracking-widest">ญาณ ณ โลก</span>
+                                <span class="text-[10px] text-slate-500 mt-1">แตะเพื่อเปิดไพ่</span>
                             </div>
-                            <span class="text-xs font-medium text-amber-200/60 uppercase tracking-widest">ญาณ ณ โลก</span>
-                            <span class="text-[10px] text-slate-500 mt-1">แตะเพื่อเปิดไพ่</span>
-                        </div>
-                        <!-- Back (หน้าไพ่พร้อมรูป) -->
-                        <div class="card-back absolute inset-0 rounded-2xl bg-slate-900 border-2 border-amber-400 p-3 flex flex-col justify-between items-center text-center gold-glow overflow-hidden">
-                            <div class="w-full h-[200px] rounded-xl overflow-hidden bg-slate-950 border border-amber-500/30 mb-2 relative flex items-center justify-center">
-                                <img src="${imgPath}" alt="${card.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'p-4 text-xs text-amber-300/80\'>${card.name}</div>';">
+
+                            <!-- Back (หน้าไพ่พร้อมชื่อไพ่เด่นชัด) -->
+                            <div class="card-back absolute inset-0 rounded-2xl bg-slate-900 border-2 border-amber-400 p-3 flex flex-col justify-between items-center text-center gold-glow overflow-hidden">
+                                
+                                <!-- Header ชื่อไพ่บนหน้าไพ่ -->
+                                <div class="w-full bg-gradient-to-r from-amber-500/20 via-amber-500/30 to-amber-500/20 py-1 px-2 rounded-lg border border-amber-400/40">
+                                    <h3 class="text-base font-bold text-amber-200 tracking-wide truncate">${card.name}</h3>
+                                </div>
+
+                                <!-- รูปภาพไพ่ -->
+                                <div class="w-full h-[175px] my-1 rounded-xl overflow-hidden bg-slate-950 border border-amber-500/30 relative flex items-center justify-center shadow-inner">
+                                    <img src="${imgPath}" alt="${card.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'p-3 text-xs text-amber-300/80 flex items-center justify-center h-full\'>${card.name}</div>';">
+                                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/90 to-transparent p-1">
+                                        <span class="text-[10px] text-amber-300/90 font-medium">ใบที่ ${card.id} • ${card.category}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Keyword -->
+                                <div class="w-full px-1">
+                                    <p class="text-[11px] text-amber-100/90 font-medium truncate italic">"${card.keyword}"</p>
+                                </div>
+
+                                <!-- ปุ่มอ่านความหมาย -->
+                                <button onclick="showDetail(${card.id})" class="w-full py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-xs font-semibold transition-colors border border-amber-500/40">
+                                    อ่านความหมายเต็ม 📖
+                                </button>
                             </div>
-                            <div class="w-full">
-                                <span class="text-[10px] px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">ใบที่ ${card.id} • ${card.category}</span>
-                                <h3 class="text-base font-bold text-amber-300 mt-1 truncate">${card.name}</h3>
-                                <p class="text-[11px] text-amber-100/80 font-medium truncate">"${card.keyword}"</p>
-                            </div>
-                            <button onclick="showDetail(${card.id})" class="w-full py-1.5 mt-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-xs font-medium transition-colors border border-amber-500/30">
-                                อ่านความหมายเต็ม 📖
-                            </button>
                         </div>
                     </div>
                 `;
 
-                cardElement.addEventListener('click', function(e) {
-                    if(!e.target.classList.contains('bg-amber-500/20') && !e.target.closest('button')) {
-                        this.querySelector('.card-inner').parentElement.classList.toggle('card-flipped');
+                // Add Flip event
+                cardElement.querySelector('.card-wrapper').addEventListener('click', function(e) {
+                    if(!e.target.closest('button')) {
+                        this.classList.toggle('card-flipped');
                     }
                 });
 
@@ -182,7 +199,7 @@
 
             modalContent.innerHTML = `
                 <div class="text-center mb-3">
-                    <div class="w-full h-[260px] max-w-[180px] mx-auto rounded-2xl overflow-hidden bg-slate-950 border-2 border-amber-400/60 mb-3 shadow-lg flex items-center justify-center">
+                    <div class="w-full h-[250px] max-w-[170px] mx-auto rounded-2xl overflow-hidden bg-slate-950 border-2 border-amber-400/60 mb-3 shadow-lg flex items-center justify-center">
                         <img src="${imgPath}" alt="${card.name}" class="w-full h-full object-cover" onerror="this.style.display='none'">
                     </div>
                     <span class="text-xs px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">
@@ -196,7 +213,7 @@
                     <p class="text-sm text-slate-200 leading-relaxed">${card.detail}</p>
                 </div>
                 <div class="text-center">
-                    <button onclick="closeModal()" class="px-6 py-2 bg-amber-500 text-slate-950 font-semibold rounded-full text-sm hover:bg-amber-400 transition-colors">
+                    <button onclick="closeModal()" class="px-6 py-2 bg-amber-500 text-slate-950 font-semibold rounded-full text-sm hover:bg-amber-400 transition-colors shadow-md">
                         ตกลง / ปิดหน้าต่าง
                     </button>
                 </div>
