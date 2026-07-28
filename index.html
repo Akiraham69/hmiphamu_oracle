@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ญาณ ณ โลก - Oracle Card Reading</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -43,7 +42,7 @@
         <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 tracking-wide">
             ไพ่ออราเคิล ญาณ ณ โลก
         </h1>
-        <p class="text-amber-200/70 text-sm mt-2">สำรับ 145 ใบ • ถอดรหัสคำทำนายชีวิตและโชคชะตา</p>
+        <p class="text-amber-200/70 text-sm mt-2">สำรับสมบูรณ์ 145 ใบ • ถอดรหัสคำทำนายชีวิตและโชคชะตา</p>
     </header>
 
     <!-- Main Container -->
@@ -68,7 +67,7 @@
 
         <!-- Cards Display Grid -->
         <div id="cards-container" class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center min-h-[380px]">
-            <!-- Dynamic Cards inserted here by JS -->
+            <!-- Dynamic Cards -->
         </div>
 
     </main>
@@ -86,25 +85,22 @@
         <p>© ญาณ ณ โลก Oracle Card Application • Powered by หมีพามู 🐻✨</p>
     </footer>
 
-    <!-- Logic & Data Script -->
+    <!-- Logic Script -->
     <script>
-        // Data Structure for 145 Cards
-        // สามารถแยกไฟล์เป็น cards.json ได้ หรือใส่ใน array นี้ได้เลยค๊าบ
-        const cardsData = [
-            { id: 1, name: "อำนาจ บารมี", category: "ทั่วไป", position_type: "อำนาจ/วาสนา", keyword: "ความเป็นผู้นำ การปกครอง ความสำเร็จในตำแหน่ง", detail: "แสดงถึงอำนาจ วาสนา บารมี การได้รับการยอมรับ การเติบโตในหน้าที่การงาน มีผู้คนยำเกรงและให้ความเคารพ" },
-            { id: 5, name: "พ่อแก่", category: "ครูบาอาจารย์", position_type: "สิ่งศักดิ์สิทธิ์", keyword: "ครูบาอาจารย์ การเรียนรู้ ปัญญาบารมี", detail: "บารมีบรมครูสายฤาษี คุ้มครองป้องกันภัย ให้ปัญญา ความรู้ความเข้าใจในการดำเนินชีวิต และการได้รับความเมตตาจากผู้ใหญ่" },
-            { id: 64, name: "เทวดาประจำตัว", category: "สิ่งศักดิ์สิทธิ์", position_type: "การคุ้มครอง", keyword: "การปกป้องคุ้มครอง สิ่งศักดิ์สิทธิ์ดูแล", detail: "มีเทวดาหรือสิ่งศักดิ์สิทธิ์คอยปกป้องคุ้มครอง แคล้วคลาดปลอดภัย ทำสิ่งใดให้หมั่นสร้างบุญกุศลเพื่อเพิ่มบารมี" },
-            { id: 65, name: "บริหาร", category: "การงาน", position_type: "การจัดการ", keyword: "การวางแผน การจัดการระบบ ความเป็นมืออาชีพ", detail: "เน้นการบริหารจัดการ ทั้งเรื่องงาน เงิน และเวลา ต้องใช้ความคิดที่เป็นระบบ การตัดสินใจด้วยเหตุผลมากกว่าอารมณ์" },
-            { id: 70, name: "ธาตุน้ำ", category: "ชุดธาตุ", position_type: "อารมณ์/ความรู้สึก", keyword: "ความยืดหยุ่น ความรู้สึก จินตนาการ", detail: "สัญลักษณ์แห่งความปรับตัว ความใจเย็น การไหลลื่น สื่อถึงอารมณ์ความรู้สึก จิตวิญญาณ และเสน่ห์" },
-            { id: 80, name: "คู่รัก", category: "ชุดคู่", position_type: "ความสัมพันธ์", keyword: "ความรัก ความเข้าใจ สมพงษ์", detail: "ความสัมพันธ์ที่แน่นแฟ้น ความเข้าใจกันอย่างดีเยี่ยม การพบเจอเนื้อคู่ หรือการส่งเสริมซึ่งกันและกัน" },
-            { id: 145, name: "รวย", category: "โชคลาภ", position_type: "ความมั่งคั่ง", keyword: "ลาภลอย ความมั่งคั่ง อุดมสมบูรณ์", detail: "ความอุดมสมบูรณ์ขั้นสุด เงินทองไหลมาเทมา การประสบความสำเร็จทางการเงิน ได้โชคได้ลาภอย่างไม่คาดฝัน" }
-            // บอสสามารถเพิ่มใบที่ 2 - 144 ต่อใน array นี้ได้ครบ 145 ใบเลยน้าค๊าบ!
-        ];
-
+        let cardsData = [];
         let currentSpreadMode = 1;
         const spreadLabels = {
             3: ["1. จุดเริ่มต้น (อดีต/รากฐาน)", "2. จุดเชื่อมโยง (ปัจจุบัน/ปัจจัย)", "3. บทสรุป (อนาคต/ทางออก)"]
         };
+
+        // Fetch cardsData from cards.json
+        fetch('cards.json')
+            .then(response => response.json())
+            .then(data => {
+                cardsData = data;
+                console.log("โหลดข้อมูลไพ่เรียบร้อยแล้วจำนวน:", cardsData.length, "ใบ");
+            })
+            .catch(error => console.error('Error loading cards:', error));
 
         function setSpread(mode) {
             currentSpreadMode = mode;
@@ -118,15 +114,18 @@
                 btn3.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-amber-500 text-slate-950 font-semibold shadow-lg";
                 btn1.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-amber-200 hover:bg-slate-700/50";
             }
-            // Clear current view
             document.getElementById('cards-container').innerHTML = '';
         }
 
         function drawCards() {
+            if (cardsData.length === 0) {
+                alert("กำลังโหลดข้อมูลไพ่ กรุณาลองใหม่อีกครั้งค๊าบ!");
+                return;
+            }
+
             const container = document.getElementById('cards-container');
             container.innerHTML = '';
 
-            // Shuffle array randomly
             const shuffled = [...cardsData].sort(() => 0.5 - Math.random());
             const selectedCards = shuffled.slice(0, currentSpreadMode);
 
@@ -139,7 +138,7 @@
                 cardElement.innerHTML = `
                     <div class="text-xs font-semibold text-amber-300 text-center mb-2 h-4">${labelText}</div>
                     <div class="card-inner relative w-full h-[320px] rounded-2xl shadow-xl transition-transform duration-700 gold-border bg-slate-800">
-                        <!-- Front (Card Back Graphic) -->
+                        <!-- Front -->
                         <div class="card-front absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-amber-950 flex flex-col items-center justify-center p-4 border border-amber-500/30">
                             <div class="w-16 h-16 rounded-full border border-amber-400/40 flex items-center justify-center bg-amber-500/10 mb-2">
                                 <span class="text-2xl">👁️</span>
@@ -147,15 +146,15 @@
                             <span class="text-xs font-medium text-amber-200/60 uppercase tracking-widest">ญาณ ณ โลก</span>
                             <span class="text-[10px] text-slate-500 mt-1">แตะเพื่อเปิดไพ่</span>
                         </div>
-                        <!-- Back (Card Result) -->
+                        <!-- Back -->
                         <div class="card-back absolute inset-0 rounded-2xl bg-slate-900 border-2 border-amber-400 p-5 flex flex-col justify-between text-center gold-glow">
                             <div>
                                 <span class="text-xs px-2 py-1 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">ใบที่ ${card.id} • ${card.category}</span>
-                                <h3 class="text-xl font-bold text-amber-300 mt-3 mb-1">${card.name}</h3>
+                                <h3 class="text-lg font-bold text-amber-300 mt-3 mb-1">${card.name}</h3>
                                 <p class="text-xs text-amber-100/80 font-medium mb-3">"${card.keyword}"</p>
                             </div>
                             <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/50">
-                                <p class="text-xs text-slate-300 line-clamp-4 leading-relaxed">${card.detail}</p>
+                                <p class="text-xs text-slate-300 line-clamp-3 leading-relaxed">${card.detail}</p>
                             </div>
                             <button onclick="showDetail(${card.id})" class="mt-2 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-xs font-medium transition-colors">
                                 อ่านความหมายเต็ม 📖
@@ -164,7 +163,6 @@
                     </div>
                 `;
 
-                // Add click to flip animation
                 cardElement.addEventListener('click', function(e) {
                     if(!e.target.classList.contains('bg-amber-500/20')) {
                         this.querySelector('.card-inner').parentElement.classList.toggle('card-flipped');
