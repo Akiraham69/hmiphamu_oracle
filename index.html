@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ไพ่ญาณ ณ โลก - บอสพี่อ๋อง</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- โหลด html2canvas สำหรับฟีเจอร์บันทึกภาพคำทำนาย -->
+    <!-- โหลด html2canvas สำหรับบันทึกภาพคำทำนาย -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -14,7 +14,7 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --gold-primary: #fbbf24;
-            --gold-glow: rgba(251, 191, 36, 0.35);
+            --gold-glow: rgba(251, 191, 36, 0.5);
             --btn-gradient: linear-gradient(135deg, #d97706 0%, #b45309 100%);
             --btn-hover: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             --share-gradient: linear-gradient(135deg, #059669 0%, #047857 100%);
@@ -96,7 +96,6 @@
             box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
         }
 
-        /* ส่วนที่จะใช้แคปเจอร์ภาพแชร์ */
         #captureArea {
             padding: 20px;
             border-radius: 20px;
@@ -108,10 +107,9 @@
         .card-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 25px;
+            gap: 30px;
             justify-content: center;
             max-width: 1200px;
-            perspective: 1000px;
         }
 
         .card-wrapper-item {
@@ -131,71 +129,99 @@
             border: 1px solid rgba(251, 191, 36, 0.3);
         }
 
-        .card-item {
-            background: var(--card-glass);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 18px;
-            padding: 15px;
+        /* --- 3D Flip Card Styles --- */
+        .card-scene {
             width: 190px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: cardAppear 0.5s ease backwards;
-        }
-
-        @keyframes cardAppear {
-            from {
-                opacity: 0;
-                transform: translateY(30px) rotateX(10deg);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) rotateX(0);
-            }
-        }
-
-        .card-item:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: var(--gold-primary);
-            box-shadow: 0 20px 45px var(--gold-glow);
-        }
-
-        .card-image-wrapper {
-            width: 100%;
             height: 270px;
-            background-color: #0b0f19;
-            border-radius: 12px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-object {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        /* เมื่อไหร่ที่มีคลาส flipped ให้พลิกหน้าการ์ด */
+        .card-object.flipped {
+            transform: rotateY(180deg);
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* หลังไพ่ (ตอนยังไม่เปิด) */
+        .card-back {
+            background: linear-gradient(135deg, #311052 0%, #11052c 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            position: relative;
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.6);
+            border: 2px solid var(--gold-primary);
+            box-shadow: inset 0 0 15px rgba(251, 191, 36, 0.2);
         }
 
-        .card-item img {
+        .card-back span {
+            font-size: 3rem;
+            animation: pulseGlow 2s infinite;
+        }
+
+        .card-back small {
+            margin-top: 10px;
+            color: var(--gold-primary);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 15px var(--gold-primary); }
+            100% { transform: scale(1.0); opacity: 0.8; }
+        }
+
+        /* หน้าไพ่ (ตอนเปิดแล้ว) */
+        .card-front {
+            background: var(--card-glass);
+            backdrop-filter: blur(12px);
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-front img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 12px;
-            transition: transform 0.4s ease;
         }
 
-        .card-item:hover img {
-            transform: scale(1.05);
-        }
-
-        .fallback-content {
-            padding: 15px;
+        .card-name-container {
             text-align: center;
-            color: var(--text-muted);
+            margin-top: 12px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease 0.4s, transform 0.4s ease 0.4s;
+        }
+
+        /* เมื่อเปิดไพ่แล้ว ให้ชื่อโผล่ขึ้นมาสมูทๆ */
+        .card-scene.revealed .card-name-container {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .card-name {
-            margin-top: 14px;
             font-size: 1.05rem;
             font-weight: 500;
             color: var(--text-main);
@@ -267,10 +293,9 @@
         <button id="resetBtn" class="btn-reset" onclick="resetReading()">🔄 เริ่มใหม่</button>
     </div>
 
-    <!-- ส่วนที่ใช้จัดกลุ่มสำหรับแคปเจอร์รูปแชร์ -->
     <div id="captureArea">
         <div class="card-container" id="cardContainer">
-            <!-- ไพ่จะแสดงที่นี่ -->
+            <!-- ไพ่จะแสดงที่นี่ในลักษณะคว่ำ -->
         </div>
     </div>
 
@@ -284,12 +309,9 @@
     <script>
         let allCards = [];
 
-        // โหลดข้อมูลจาก cards.json อัตโนมัติ
         fetch('cards.json')
             .then(response => response.json())
-            .then(data => {
-                allCards = data;
-            })
+            .then(data => { allCards = data; })
             .catch(error => console.error('Error loading cards.json:', error));
 
         const spreadLabels = {
@@ -317,9 +339,7 @@
             selected.forEach((card, index) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'card-wrapper-item';
-                wrapper.style.animationDelay = `${index * 0.15}s`;
 
-                // ถ้าเป็นสเปรดหลายใบ ให้ใส่ป้ายตำแหน่งกำกับ
                 if (count > 1) {
                     const label = document.createElement('div');
                     label.className = 'position-label';
@@ -327,33 +347,60 @@
                     wrapper.appendChild(label);
                 }
 
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'card-item';
-                cardDiv.onclick = () => openModal(card.image, card.name);
+                // โครงสร้าง 3D Scene สำหรับไพ่คว่ำ
+                const scene = document.createElement('div');
+                scene.className = 'card-scene';
 
-                cardDiv.innerHTML = `
-                    <div class="card-image-wrapper">
-                        <img src="${card.image}" alt="${card.name}" onerror="handleImageError(this)">
-                        <div class="fallback-content" style="display:none; position:absolute; width:100%; height:100%; flex-direction:column; justify-content:center; align-items:center;">
-                            <span style="font-size: 2.5rem; margin-bottom: 5px;">🎴</span>
-                            <small style="color: #cbd5e1; font-weight: 500;">ใบที่ ${card.id}</small>
-                        </div>
-                    </div>
-                    <div class="card-name">${card.name}</div>
+                const cardObject = document.createElement('div');
+                cardObject.className = 'card-object';
+
+                // หน้าหลังไพ่ (ตอนยังไม่กด)
+                const cardBack = document.createElement('div');
+                cardBack.className = 'card-face card-back';
+                cardBack.innerHTML = `
+                    <span>🔮</span>
+                    <small>แตะเพื่อเปิด</small>
                 `;
-                
-                wrapper.appendChild(cardDiv);
+
+                // หน้าหน้าไพ่ (ตอนเปิดแล้ว)
+                const cardFront = document.createElement('div');
+                cardFront.className = 'card-face card-front';
+                cardFront.innerHTML = `
+                    <img src="${card.image}" alt="${card.name}" onerror="handleImageError(this)">
+                `;
+
+                cardObject.appendChild(cardBack);
+                cardObject.appendChild(cardFront);
+                scene.appendChild(cardObject);
+
+                // ชื่อไพ่ด้านล่าง (จะโผล่มาหลังเปิด)
+                const nameContainer = document.createElement('div');
+                nameContainer.className = 'card-name-container';
+                nameContainer.innerHTML = `<div class="card-name">${card.name}</div>`;
+                wrapper.appendChild(scene);
+                wrapper.appendChild(nameContainer);
+
+                // ฟังก์ชันกดคลิกเพื่อพลิกไพ่
+                scene.onclick = () => {
+                    if (!cardObject.classList.contains('flipped')) {
+                        cardObject.classList.add('flipped');
+                        scene.classList.add('revealed');
+                    } else {
+                        // ถ้าเปิดแล้ว กดซ้ำเพื่อเปิด Modal ขยายดูรูปใหญ่เต็มตา
+                        openModal(card.image, card.name);
+                    }
+                };
+
                 container.appendChild(wrapper);
             });
 
-            // แสดงปุ่มแชร์และปุ่มเริ่มใหม่
             document.getElementById('shareBtn').style.display = 'inline-block';
             document.getElementById('resetBtn').style.display = 'inline-block';
         }
 
         function handleImageError(imgElement) {
             imgElement.style.display = 'none';
-            imgElement.nextElementSibling.style.display = 'flex';
+            imgElement.parentElement.innerHTML = '<div style="padding:20px; text-align:center; color:#ef4444; font-size:0.9rem;">ไม่พบไฟล์รูป</div>';
         }
 
         function resetReading() {
@@ -381,15 +428,11 @@
             const modalTitle = document.getElementById('modalTitle');
 
             modalImg.src = imgSrc;
-            modalImg.onerror = function() { this.style.display = 'none'; };
-            modalImg.onload = function() { this.style.display = 'block'; };
-
             modalTitle.textContent = title;
             modal.style.display = 'flex';
         }
 
         function closeModal() {
-            document.getElementById('modalImg').src = '';
             document.getElementById('cardModal').style.display = 'none';
         }
     </script>
