@@ -5,16 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ไพ่ญาณ ณ โลก - บอสพี่อ๋อง</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- โหลด html2canvas สำหรับฟีเจอร์บันทึกภาพคำทำนาย -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --bg-gradient: radial-gradient(circle at center, #1e1b4b 0%, #090d16 100%);
-            --card-glass: rgba(30, 41, 59, 0.65);
+            --card-glass: rgba(30, 41, 59, 0.75);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --gold-primary: #fbbf24;
             --gold-glow: rgba(251, 191, 36, 0.35);
             --btn-gradient: linear-gradient(135deg, #d97706 0%, #b45309 100%);
             --btn-hover: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --share-gradient: linear-gradient(135deg, #059669 0%, #047857 100%);
             --reset-gradient: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
         }
 
@@ -32,7 +35,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         h1 {
@@ -51,9 +54,9 @@
         }
 
         .controls {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -62,38 +65,70 @@
             background: var(--btn-gradient);
             color: #fff;
             border: none;
-            padding: 12px 28px;
-            font-size: 1.05rem;
+            padding: 10px 20px;
+            font-size: 0.95rem;
             font-weight: 500;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            letter-spacing: 0.5px;
         }
 
         button:hover {
             background: var(--btn-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(217, 119, 6, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4);
+        }
+
+        .btn-share {
+            background: var(--share-gradient);
+            display: none;
+        }
+        .btn-share:hover {
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
         }
 
         .btn-reset {
             background: var(--reset-gradient);
             display: none; 
         }
-
         .btn-reset:hover {
-            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* ส่วนที่จะใช้แคปเจอร์ภาพแชร์ */
+        #captureArea {
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: 25px;
             justify-content: center;
             max-width: 1200px;
             perspective: 1000px;
+        }
+
+        .card-wrapper-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .position-label {
+            color: var(--gold-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(251, 191, 36, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
         }
 
         .card-item {
@@ -101,8 +136,8 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 18px;
-            padding: 20px;
-            width: 210px;
+            padding: 15px;
+            width: 190px;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             cursor: pointer;
@@ -122,14 +157,14 @@
         }
 
         .card-item:hover {
-            transform: translateY(-10px) scale(1.02);
+            transform: translateY(-8px) scale(1.02);
             border-color: var(--gold-primary);
             box-shadow: 0 20px 45px var(--gold-glow);
         }
 
         .card-image-wrapper {
             width: 100%;
-            height: 300px;
+            height: 270px;
             background-color: #0b0f19;
             border-radius: 12px;
             display: flex;
@@ -160,11 +195,10 @@
         }
 
         .card-name {
-            margin-top: 16px;
-            font-size: 1.15rem;
+            margin-top: 14px;
+            font-size: 1.05rem;
             font-weight: 500;
             color: var(--text-main);
-            letter-spacing: 0.5px;
         }
 
         /* Modal ขยายภาพพรีเมียม */
@@ -200,7 +234,6 @@
             font-size: 1.8rem;
             font-weight: 500;
             text-shadow: 0 0 15px var(--gold-glow);
-            letter-spacing: 1px;
         }
 
         .modal-close {
@@ -213,7 +246,6 @@
             transition: color 0.2s;
             line-height: 1;
         }
-
         .modal-close:hover {
             color: var(--gold-primary);
         }
@@ -223,17 +255,23 @@
 
     <header>
         <h1>🔮 ไพ่ญาณ ณ โลก 🔮</h1>
-        <p class="subtitle">ระบบสุ่มเปิดหน้าไพ่พยากรณ์</p>
+        <p class="subtitle">ระบบสุ่มเปิดหน้าไพ่พยากรณ์ - หมีพามู</p>
     </header>
 
     <div class="controls">
-        <button onclick="drawCards(1)">🎴 เปิดไพ่ 1 ใบ</button>
-        <button onclick="drawCards(3)">🎴 เปิดไพ่ 3 ใบ</button>
+        <button onclick="drawSpread('single')">🎴 เปิด 1 ใบ</button>
+        <button onclick="drawSpread('general3')">🎴 สเปรด 3 ใบ (อดีต-ปัจจุบัน-อนาคต)</button>
+        <button onclick="drawSpread('finance3')">💰 สเปรดการเงิน (3 ใบ)</button>
+        <button onclick="drawSpread('love3')">💖 สเปรดความรัก (3 ใบ)</button>
+        <button id="shareBtn" class="btn-share" onclick="captureAndShare()">📥 บันทึกภาพคำทำนาย</button>
         <button id="resetBtn" class="btn-reset" onclick="resetReading()">🔄 เริ่มใหม่</button>
     </div>
 
-    <div class="card-container" id="cardContainer">
-        <!-- ไพ่จะแสดงที่นี่ -->
+    <!-- ส่วนที่ใช้จัดกลุ่มสำหรับแคปเจอร์รูปแชร์ -->
+    <div id="captureArea">
+        <div class="card-container" id="cardContainer">
+            <!-- ไพ่จะแสดงที่นี่ -->
+        </div>
     </div>
 
     <!-- Modal ขยายภาพ -->
@@ -254,7 +292,14 @@
             })
             .catch(error => console.error('Error loading cards.json:', error));
 
-        function drawCards(count) {
+        const spreadLabels = {
+            'single': ['คำทำนายภาพรวม'],
+            'general3': ['1. อดีต / รากเหง้า', '2. ปัจจุบัน / พลังงานหลัก', '3. อนาคต / แนวโน้ม'],
+            'finance3': ['1. สถานะการเงินปัจจุบัน', '2. อุปสรรค / รอยรั่ว', '3. แนวทางรับทรัพย์'],
+            'love3': ['1. ตัวตนและพลังงานเรา', '2. พลังงานฝั่งตรงข้าม', '3. บทสรุปความสัมพันธ์']
+        };
+
+        function drawSpread(type) {
             if (allCards.length === 0) {
                 alert('กำลังโหลดข้อมูลไพ่ กรุณาสักครู่...');
                 return;
@@ -263,30 +308,46 @@
             const container = document.getElementById('cardContainer');
             container.innerHTML = '';
 
+            let count = (type === 'single') ? 1 : 3;
+            let labels = spreadLabels[type];
+
             let shuffled = [...allCards].sort(() => 0.5 - Math.random());
             let selected = shuffled.slice(0, count);
 
             selected.forEach((card, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'card-wrapper-item';
+                wrapper.style.animationDelay = `${index * 0.15}s`;
+
+                // ถ้าเป็นสเปรดหลายใบ ให้ใส่ป้ายตำแหน่งกำกับ
+                if (count > 1) {
+                    const label = document.createElement('div');
+                    label.className = 'position-label';
+                    label.textContent = labels[index];
+                    wrapper.appendChild(label);
+                }
+
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'card-item';
-                cardDiv.style.animationDelay = `${index * 0.15}s`;
                 cardDiv.onclick = () => openModal(card.image, card.name);
 
                 cardDiv.innerHTML = `
                     <div class="card-image-wrapper">
                         <img src="${card.image}" alt="${card.name}" onerror="handleImageError(this)">
                         <div class="fallback-content" style="display:none; position:absolute; width:100%; height:100%; flex-direction:column; justify-content:center; align-items:center;">
-                            <span style="font-size: 2.8rem; margin-bottom: 8px;">🎴</span>
-                            <small style="color: #cbd5e1; font-weight: 500; font-size: 0.9rem;">ใบที่ ${card.id}</small>
-                            <small style="color: #ef4444; font-size: 0.75rem; margin-top: 4px;">ไม่พบไฟล์รูปในระบบ</small>
+                            <span style="font-size: 2.5rem; margin-bottom: 5px;">🎴</span>
+                            <small style="color: #cbd5e1; font-weight: 500;">ใบที่ ${card.id}</small>
                         </div>
                     </div>
                     <div class="card-name">${card.name}</div>
                 `;
-                container.appendChild(cardDiv);
+                
+                wrapper.appendChild(cardDiv);
+                container.appendChild(wrapper);
             });
 
-            // แสดงปุ่ม "เริ่มใหม่" หลังจากเปิดไพ่แล้ว
+            // แสดงปุ่มแชร์และปุ่มเริ่มใหม่
+            document.getElementById('shareBtn').style.display = 'inline-block';
             document.getElementById('resetBtn').style.display = 'inline-block';
         }
 
@@ -297,7 +358,21 @@
 
         function resetReading() {
             document.getElementById('cardContainer').innerHTML = '';
+            document.getElementById('shareBtn').style.display = 'none';
             document.getElementById('resetBtn').style.display = 'none';
+        }
+
+        function captureAndShare() {
+            const captureArea = document.getElementById('captureArea');
+            html2canvas(captureArea, {
+                backgroundColor: '#090d16',
+                scale: 2
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'YarnNaLok-Reading.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
         }
 
         function openModal(imgSrc, title) {
@@ -306,12 +381,8 @@
             const modalTitle = document.getElementById('modalTitle');
 
             modalImg.src = imgSrc;
-            modalImg.onerror = function() {
-                this.style.display = 'none';
-            };
-            modalImg.onload = function() {
-                this.style.display = 'block';
-            };
+            modalImg.onerror = function() { this.style.display = 'none'; };
+            modalImg.onload = function() { this.style.display = 'block'; };
 
             modalTitle.textContent = title;
             modal.style.display = 'flex';
