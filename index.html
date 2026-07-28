@@ -3,231 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ญาณ ณ โลก - Oracle Card Reading</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>ไพ่ญาณ ณ โลก - บอสพี่อ๋อง</title>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+        }
         body {
-            font-family: 'Prompt', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            font-family: 'Kanit', sans-serif, system-ui;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
-        .card-inner {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
+        h1 {
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            text-align: center;
         }
-        .card-flipped .card-inner {
-            transform: rotateY(180deg);
+        .controls {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 12px;
         }
-        .card-front, .card-back {
-            backface-visibility: hidden;
+        button {
+            background-color: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
         }
-        .card-back {
-            transform: rotateY(180deg);
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
-        .gold-glow {
-            box-shadow: 0 0 25px rgba(234, 179, 8, 0.35);
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 1000px;
         }
-        .gold-border {
-            border: 1px solid rgba(234, 179, 8, 0.4);
+        .card-item {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .card-item:hover {
+            transform: translateY(-5px);
+        }
+        .card-item img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .card-name {
+            margin-top: 12px;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+        /* Modal สำหรับขยายภาพไพ่ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+        .modal img {
+            max-width: 90vw;
+            max-height: 75vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .modal h2 {
+            margin-top: 20px;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
         }
     </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col justify-between p-4 sm:p-6">
+<body>
 
-    <!-- Header Section -->
-    <header class="text-center my-6">
-        <div class="inline-block p-3 rounded-full bg-amber-500/10 gold-border mb-3">
-            <span class="text-3xl">🔮</span>
-        </div>
-        <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 tracking-wide">
-            ไพ่ออราเคิล ญาณ ณ โลก
-        </h1>
-        <p class="text-amber-200/70 text-sm mt-2">สำรับสมบูรณ์ 145 ใบ • ถอดรหัสคำทำนายชีวิตและโชคชะตา</p>
-    </header>
-
-    <!-- Main Container -->
-    <main class="max-w-4xl mx-auto w-full flex-grow flex flex-col items-center justify-center">
-        
-        <!-- Spread Mode Selection -->
-        <div class="flex gap-3 mb-8 bg-slate-800/80 p-1.5 rounded-2xl gold-border backdrop-blur">
-            <button onclick="setSpread(1)" id="btn-mode-1" class="px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-amber-500 text-slate-950 font-semibold shadow-lg">
-                เปิด 1 ใบ (คำตอบเร็ว)
-            </button>
-            <button onclick="setSpread(3)" id="btn-mode-3" class="px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-amber-200 hover:bg-slate-700/50">
-                เปิด 3 ใบ (เล่าเรื่อง)
-            </button>
-        </div>
-
-        <!-- Draw Action Button -->
-        <div class="mb-8 text-center">
-            <button onclick="drawCards()" class="px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-lg rounded-full shadow-lg gold-glow hover:scale-105 active:scale-95 transition-all">
-                ✨ สับไพ่และเสี่ยงทาย ✨
-            </button>
-        </div>
-
-        <!-- Cards Display Grid -->
-        <div id="cards-container" class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center min-h-[420px]">
-            <!-- Dynamic Cards -->
-        </div>
-
-    </main>
-
-    <!-- Modal for Card Details -->
-    <div id="card-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 gold-border rounded-3xl max-w-md w-full p-6 relative gold-glow text-slate-100 max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold z-10">&times;</button>
-            <div id="modal-content"></div>
-        </div>
+    <h1>🔮 ไพ่ญาณ ณ โลก 🔮</h1>
+    <div class="controls">
+        <button onclick="drawCards(3)">🎴 สุ่มไพ่ 3 ใบ</button>
+        <button onclick="resetReading()" style="background-color: #ef4444; color: #fff;">🔄 เริ่มใหม่</button>
     </div>
 
-    <!-- Footer -->
-    <footer class="text-center py-6 text-slate-500 text-xs">
-        <p>© ญาณ ณ โลก Oracle Card Application • Powered by หมีพามู 🐻✨</p>
-    </footer>
+    <div class="card-container" id="cardContainer">
+        <!-- ไพ่จะแสดงที่นี่ -->
+    </div>
 
-    <!-- Logic Script -->
+    <!-- Modal ขยายภาพ -->
+    <div class="modal" id="cardModal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img id="modalImg" src="" alt="Expanded Card">
+        <h2 id="modalTitle"></h2>
+    </div>
+
     <script>
-        let cardsData = [];
-        let currentSpreadMode = 1;
-        const spreadLabels = {
-            3: ["1. จุดเริ่มต้น (อดีต/รากฐาน)", "2. จุดเชื่อมโยง (ปัจจุบัน/ปัจจัย)", "3. บทสรุป (อนาคต/ทางออก)"]
-        };
+        let allCards = [];
 
-        // Fetch cardsData
+        // โหลดข้อมูลจาก cards.json อัตโนมัติ
         fetch('cards.json')
             .then(response => response.json())
             .then(data => {
-                cardsData = data;
+                allCards = data;
             })
-            .catch(error => console.error('Error loading cards:', error));
+            .catch(error => console.error('Error loading cards.json:', error));
 
-        function setSpread(mode) {
-            currentSpreadMode = mode;
-            const btn1 = document.getElementById('btn-mode-1');
-            const btn3 = document.getElementById('btn-mode-3');
-            
-            if (mode === 1) {
-                btn1.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-amber-500 text-slate-950 font-semibold shadow-lg";
-                btn3.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-amber-200 hover:bg-slate-700/50";
-            } else {
-                btn3.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-amber-500 text-slate-950 font-semibold shadow-lg";
-                btn1.className = "px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-amber-200 hover:bg-slate-700/50";
-            }
-            document.getElementById('cards-container').innerHTML = '';
-        }
-
-        function drawCards() {
-            if (cardsData.length === 0) {
-                alert("กำลังโหลดข้อมูลไพ่ กรุณาลองใหม่อีกครั้งค๊าบ!");
+        function drawCards(count) {
+            if (allCards.length === 0) {
+                alert('กำลังโหลดข้อมูลไพ่ กรุณาสักครู่...');
                 return;
             }
 
-            const container = document.getElementById('cards-container');
+            const container = document.getElementById('cardContainer');
             container.innerHTML = '';
 
-            const shuffled = [...cardsData].sort(() => 0.5 - Math.random());
-            const selectedCards = shuffled.slice(0, currentSpreadMode);
+            // สุ่มไพ่แบบไม่ซ้ำกัน
+            let shuffled = [...allCards].sort(() => 0.5 - Math.random());
+            let selected = shuffled.slice(0, count);
 
-            selectedCards.forEach((card, index) => {
-                const cardElement = document.createElement('div');
-                cardElement.className = 'w-full max-w-[240px] flex flex-col items-center group';
-                
-                const labelText = currentSpreadMode === 3 ? spreadLabels[3][index] : "คำทำนายของคุณ";
-                const imgPath = card.image || `images/${card.id}.jpg`;
+            selected.forEach(card => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card-item';
+                // คลิกที่การ์ดเพื่อขยายภาพใหญ่
+                cardDiv.onclick = () => openModal(card.image_file, card.name);
 
-                cardElement.innerHTML = `
-                    <div class="text-xs font-semibold text-amber-300 text-center mb-2 h-4 tracking-wide">${labelText}</div>
-                    <div class="card-wrapper w-full h-[350px] perspective cursor-pointer">
-                        <div class="card-inner relative w-full h-full rounded-2xl shadow-xl transition-transform duration-700 gold-border bg-slate-800">
-                            
-                            <!-- Front (หลังไพ่) -->
-                            <div class="card-front absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-amber-950 flex flex-col items-center justify-center p-4 border border-amber-500/30">
-                                <div class="w-16 h-16 rounded-full border border-amber-400/40 flex items-center justify-center bg-amber-500/10 mb-2">
-                                    <span class="text-2xl">👁️</span>
-                                </div>
-                                <span class="text-xs font-medium text-amber-200/60 uppercase tracking-widest">ญาณ ณ โลก</span>
-                                <span class="text-[10px] text-slate-500 mt-1">แตะเพื่อเปิดไพ่</span>
-                            </div>
-
-                            <!-- Back (หน้าไพ่พร้อมชื่อไพ่เด่นชัด) -->
-                            <div class="card-back absolute inset-0 rounded-2xl bg-slate-900 border-2 border-amber-400 p-3 flex flex-col justify-between items-center text-center gold-glow overflow-hidden">
-                                
-                                <!-- Header ชื่อไพ่บนหน้าไพ่ -->
-                                <div class="w-full bg-gradient-to-r from-amber-500/20 via-amber-500/30 to-amber-500/20 py-1 px-2 rounded-lg border border-amber-400/40">
-                                    <h3 class="text-base font-bold text-amber-200 tracking-wide truncate">${card.name}</h3>
-                                </div>
-
-                                <!-- รูปภาพไพ่ -->
-                                <div class="w-full h-[175px] my-1 rounded-xl overflow-hidden bg-slate-950 border border-amber-500/30 relative flex items-center justify-center shadow-inner">
-                                    <img src="${imgPath}" alt="${card.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'p-3 text-xs text-amber-300/80 flex items-center justify-center h-full\'>${card.name}</div>';">
-                                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/90 to-transparent p-1">
-                                        <span class="text-[10px] text-amber-300/90 font-medium">ใบที่ ${card.id} • ${card.category}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Keyword -->
-                                <div class="w-full px-1">
-                                    <p class="text-[11px] text-amber-100/90 font-medium truncate italic">"${card.keyword}"</p>
-                                </div>
-
-                                <!-- ปุ่มอ่านความหมาย -->
-                                <button onclick="showDetail(${card.id})" class="w-full py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-xs font-semibold transition-colors border border-amber-500/40">
-                                    อ่านความหมายเต็ม 📖
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                cardDiv.innerHTML = `
+                    <img src="${card.image_file}" alt="${card.name}">
+                    <div class="card-name">${card.name}</div>
                 `;
-
-                // Add Flip event
-                cardElement.querySelector('.card-wrapper').addEventListener('click', function(e) {
-                    if(!e.target.closest('button')) {
-                        this.classList.toggle('card-flipped');
-                    }
-                });
-
-                container.appendChild(cardElement);
+                container.appendChild(cardDiv);
             });
         }
 
-        function showDetail(cardId) {
-            const card = cardsData.find(c => c.id === cardId);
-            if (!card) return;
+        function resetReading() {
+            document.getElementById('cardContainer').innerHTML = '';
+        }
 
-            const imgPath = card.image || `images/${card.id}.jpg`;
-            const modalContent = document.getElementById('modal-content');
+        function openModal(imgSrc, title) {
+            const modal = document.getElementById('cardModal');
+            const modalImg = document.getElementById('modalImg');
+            const modalTitle = document.getElementById('modalTitle');
 
-            modalContent.innerHTML = `
-                <div class="text-center mb-3">
-                    <div class="w-full h-[250px] max-w-[170px] mx-auto rounded-2xl overflow-hidden bg-slate-950 border-2 border-amber-400/60 mb-3 shadow-lg flex items-center justify-center">
-                        <img src="${imgPath}" alt="${card.name}" class="w-full h-full object-cover" onerror="this.style.display='none'">
-                    </div>
-                    <span class="text-xs px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">
-                        ไพ่ใบที่ ${card.id} • ${card.category}
-                    </span>
-                    <h2 class="text-2xl font-bold text-amber-300 mt-2">${card.name}</h2>
-                    <p class="text-sm text-amber-200/80 mt-0.5 italic">"${card.keyword}"</p>
-                </div>
-                <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60 mb-4">
-                    <h4 class="text-xs font-semibold text-amber-400 mb-1">คำทำนายรายละเอียด</h4>
-                    <p class="text-sm text-slate-200 leading-relaxed">${card.detail}</p>
-                </div>
-                <div class="text-center">
-                    <button onclick="closeModal()" class="px-6 py-2 bg-amber-500 text-slate-950 font-semibold rounded-full text-sm hover:bg-amber-400 transition-colors shadow-md">
-                        ตกลง / ปิดหน้าต่าง
-                    </button>
-                </div>
-            `;
-
-            const modal = document.getElementById('card-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            modalImg.src = imgSrc;
+            modalTitle.textContent = title;
+            modal.style.display = 'flex';
         }
 
         function closeModal() {
-            const modal = document.getElementById('card-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            document.getElementById('modalImg').src = '';
+            document.getElementById('cardModal').style.display = 'none';
         }
     </script>
 </body>
